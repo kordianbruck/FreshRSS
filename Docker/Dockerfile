@@ -15,8 +15,13 @@ WORKDIR ${FRESHRSS_ROOT}
 COPY . ${FRESHRSS_ROOT}
 COPY ./Docker/*.Apache.conf /etc/apache2/conf.d/
 
+COPY ./Docker/cronjob /var/spool/cron/crontabs/root
+CMD crond -l 2 -f
+
 EXPOSE 80
 CMD php -f ./cli/prepare.php > /dev/null && \
 	chown -R :www-data ${FRESHRSS_ROOT} && \
 	chmod -R g+r ${FRESHRSS_ROOT} && chmod -R g+w ${FRESHRSS_ROOT}/data/ && \
 	exec httpd -D FOREGROUND
+
+
